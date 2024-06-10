@@ -24,7 +24,7 @@ nodes:
   - hostname: "talos1"
     ipAddress: "192.168.206.10"
     installDisk: "/dev/vda"
-    talosImageURL: factory.talos.dev/installer/
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -41,7 +41,7 @@ nodes:
   - hostname: "talos2"
     ipAddress: "192.168.206.11"
     installDisk: "/dev/vda"
-    talosImageURL: factory.talos.dev/installer/
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -58,7 +58,7 @@ nodes:
   - hostname: "talos3"
     ipAddress: "192.168.206.12"
     installDisk: "/dev/vda"
-    talosImageURL: factory.talos.dev/installer/
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -80,7 +80,6 @@ patches:
     machine:
       network:
         nameservers:
-          - 192.168.206.1
           - 8.8.8.8
   - # Configure NTP
     |-
