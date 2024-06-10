@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.7.4
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.30.1
+
+clusterName: "home-talos"
+endpoint: https://192.168.206.2:6443
+clusterPodNets:
+  - "10.69.0.0/16"
+clusterSvcNets:
+  - "10.96.0.0/16"
+additionalApiServerCertSans: &sans
+  - "192.168.206.2"
+  - 127.0.0.1 # KubePrism
+additionalMachineCertSans: *sans
+
+# Disable built-in Flannel to use Cilium
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: "talos1"
+    ipAddress: "192.168.206.10"
+    installDisk: "/dev/vda"
+    talosImageURL: factory.talos.dev/installer/
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "d2:dc:8a:66:f5:04"
+        dhcp: false
+        addresses:
+          - "192.168.206.10/24"
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "192.168.206.1"
+        mtu: 1500
+        vip:
+          ip: "192.168.206.2"
+  - hostname: "talos2"
+    ipAddress: "192.168.206.11"
+    installDisk: "/dev/vda"
+    talosImageURL: factory.talos.dev/installer/
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "e6:dd:8f:a9:de:97"
+        dhcp: false
+        addresses:
+          - "192.168.206.11/24"
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "192.168.206.1"
+        mtu: 1500
+        vip:
+          ip: "192.168.206.2"
+  - hostname: "talos3"
+    ipAddress: "192.168.206.12"
+    installDisk: "/dev/vda"
+    talosImageURL: factory.talos.dev/installer/
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "e6:dd:8f:a9:de:97"
+        dhcp: false
+        addresses:
+          - "192.168.206.12/24"
+        routes:
+          - network: 0.0.0.0/0
+            gateway: "192.168.206.1"
+        mtu: 1500
+        vip:
+          ip: "192.168.206.2"
+
+# Global patches
+patches:
+  - # Force nameserver
+    |-
+    machine:
+      network:
+        nameservers:
+          - 192.168.206.1
+          - 8.8.8.8
+  - # Configure NTP
+    |-
+    machine:
+      time:
+        disabled: false
+        servers:
+          - time.cloudflate.com
+  - "@./patches/global/cluster-discovery.yaml"
+  - "@./patches/global/containerd.yaml"
+  - "@./patches/global/disable-search-domain.yaml"
+  - "@./patches/global/hostdns.yaml"
+  - "@./patches/global/kubelet.yaml"
+  - "@./patches/global/openebs-local.yaml"
+  - "@./patches/global/sysctl.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./patches/controller/api-access.yaml"
+    - "@./patches/controller/cluster.yaml"
+    - "@./patches/controller/disable-admission-controller.yaml"
+    - "@./patches/controller/etcd.yaml"
+
