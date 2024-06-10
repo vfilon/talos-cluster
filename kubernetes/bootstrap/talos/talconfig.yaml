@@ -82,6 +82,15 @@ patches:
         nameservers:
           - 192.168.206.1
           - 8.8.8.8
+  - # Configure NTP
+    |-
+    machine:
+      time:
+        disabled: false
+        servers:
+          - 0.by.pool.ntp.org
+          - 0.europe.pool.ntp.org
+          - 1.europe.pool.ntp.org
   - "@./patches/global/cluster-discovery.yaml"
   - "@./patches/global/containerd.yaml"
   - "@./patches/global/disable-search-domain.yaml"
