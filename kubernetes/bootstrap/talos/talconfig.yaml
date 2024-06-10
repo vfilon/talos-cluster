@@ -62,7 +62,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "e6:dd:8f:a9:de:97"
+          hardwareAddr: "22:9b:8d:16:06:4a"
         dhcp: false
         addresses:
           - "192.168.206.12/24"
@@ -82,13 +82,6 @@ patches:
         nameservers:
           - 192.168.206.1
           - 8.8.8.8
-  - # Configure NTP
-    |-
-    machine:
-      time:
-        disabled: false
-        servers:
-          - time.cloudflare.com
   - "@./patches/global/cluster-discovery.yaml"
   - "@./patches/global/containerd.yaml"
   - "@./patches/global/disable-search-domain.yaml"
